@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://example.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://example.com/official-site.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://example.com/zerkalo.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://example.com/login.html</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://example.com/registration.html</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://example.com/download.html</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
-  <url><loc>https://example.com/casino.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://example.com/bonus.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://example.com/bets.html</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://selector-casino.vercel.app/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://selector-casino.vercel.app/official-site.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://selector-casino.vercel.app/zerkalo.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://selector-casino.vercel.app/login.html</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://selector-casino.vercel.app/registration.html</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://selector-casino.vercel.app/download.html</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
+  <url><loc>https://selector-casino.vercel.app/casino.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://selector-casino.vercel.app/bonus.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://selector-casino.vercel.app/bets.html</loc><changefreq>weekly</changefreq><priority>0.85</priority></url>
 </urlset>
