@@ -3,9 +3,8 @@
 import json
 import os
 
-import expand_content  # noqa: F401 — extends INDEX_BODY, TOPIC_BODY, TRUST_PAGES
-
-from content_faq import INDEX_BODY, PAGE_FAQ, TOPIC_BODY, TRUST_PAGES
+from content_faq import PAGE_FAQ, TRUST_PAGES
+from page_content import PAGES
 
 BASE = "https://selector-casino.vercel.app"
 AFF = "https://lkga.cc/0b02c9ea"
@@ -253,7 +252,7 @@ def useful_links(exclude: str) -> str:
     </section>"""
 
 
-def faq_block(faq: list) -> str:
+def faq_block(faq: list, title: str) -> str:
     items = []
     for q in faq:
         items.append(
@@ -264,7 +263,7 @@ def faq_block(faq: list) -> str:
         )
     return f"""    <section class="section-block" id="faq">
       <div class="container">
-        <h2>Частые вопросы о селектор казино</h2>
+        <h2>{title}</h2>
 {chr(10).join(items)}
       </div>
     </section>"""
@@ -285,7 +284,11 @@ def render_page(page: dict) -> str:
     active = page.get("nav_active", "")
     hero_ps = "\n".join(f"          <p>{p}</p>" for p in page["hero_lead"])
     sections_html = "\n".join(page["sections"])
-    faq_html = faq_block(page["faq"]) if page.get("faq") else ""
+    faq_html = (
+        faq_block(page["faq"], page.get("faq_title", "Частые вопросы о селектор казино"))
+        if page.get("faq")
+        else ""
+    )
     useful = useful_links(page.get("exclude_useful", ""))
     return f"""<!DOCTYPE html>
 <html lang="ru">
@@ -321,53 +324,31 @@ def render_page(page: dict) -> str:
 
 
 # --- Page definitions ---
-def split_into_sections(h2_list, paragraphs):
-    per = max(4, (len(paragraphs) + len(h2_list) - 1) // max(len(h2_list), 1))
-    sections = []
-    idx = 0
-    for h2 in h2_list:
-        chunk = paragraphs[idx : idx + per]
-        idx += per
-        if len(chunk) < 3:
-            chunk = paragraphs[-per:] if len(paragraphs) >= per else paragraphs
-        sections.append(section(h2, chunk))
-    return sections
+def page_sections(topic: str):
+    return [section(h2, paras) for h2, paras in PAGES[topic]["sections"]]
 
 
 def build_pages():
     pages = []
 
-    index_h2 = [
-        "Что такое Selector Casino и селектор казино",
-        "Как пользоваться селектор казино онлайн",
-        "Преимущества Selector Casino для игроков",
-        "Как начать в селектор казино",
-        "События и поддержка Selector Casino",
-        "Обзор разделов Selector Casino на главной",
-        "Безопасность и ответственная игра в селектор казино",
-        "Почему структурированный сайт селектор казино удобнее поиска",
-        "Глоссарий запросов Selector Casino",
-    ]
+    idx = PAGES["index"]
     pages.append(
         {
             "file": "index.html",
             "path": "/",
             "title": "Селектор казино — официальный сайт, вход и зеркало",
-            "description": "Селектор казино: официальный сайт, вход, регистрация, бонусы, зеркало, ставки, казино и скачать приложение. Актуальный обзор Selector Casino.",
-            "h1": "Selector официальный сайт",
+            "description": "Селектор казино: официальный сайт, вход, регистрация, бонусы, зеркало, ставки, казино и скачать приложение. Обзор Selector Casino.",
+            "h1": "Селектор казино — обзор для игроков",
             "breadcrumb": "Главная",
             "cta": "Получить бонус",
             "banner_alt": "Селектор казино официальный сайт и бонусы",
             "nav_active": "home",
             "article": False,
             "exclude_useful": "home",
-            "hero_lead": [
-                "Селектор казино (Selector Casino) — обзорная точка входа: официальный сайт, вход, регистрация, зеркало, бонусы, игры, live-казино, ставки и мобильное приложение.",
-                "Материал структурирован по интентам: каждая тема на отдельной странице с уникальным текстом, canonical и schema.org разметкой.",
-                "Используйте меню или блок «Полезные разделы» для быстрого перехода. Все CTA ведут на актуальную партнёрскую ссылку.",
-            ],
-            "sections": split_into_sections(index_h2, INDEX_BODY),
+            "hero_lead": idx["hero"],
+            "sections": page_sections("index"),
             "faq": PAGE_FAQ["index"],
+            "faq_title": idx["faq_title"],
         }
     )
 
@@ -384,14 +365,6 @@ def build_pages():
             "banner_alt": "Селектор казино официальный сайт и разделы",
             "nav_active": "official-site",
             "exclude_useful": "official-site",
-            "h2": [
-                "Что такое официальный сайт селектор казино",
-                "Как пользоваться официальным сайтом Selector Casino",
-                "Преимущества официального доступа к селектор казино",
-                "Как начать на официальном сайте Selector Casino",
-                "Дополнительная информация об официальном сайте селектор казино",
-                "Проверочный список официального сайта Selector Casino",
-            ],
         },
         {
             "file": "login.html",
@@ -399,20 +372,12 @@ def build_pages():
             "topic": "login",
             "title": "Селектор казино вход — как войти в аккаунт",
             "description": "Вход в селектор казино и личный кабинет Selector Casino: пошаговая авторизация, восстановление пароля и типовые ошибки входа.",
-            "h1": "Вход в Selector Casino",
+            "h1": "Селектор казино вход",
             "breadcrumb": "Вход",
             "cta": "Войти",
             "banner_alt": "Селектор казино вход в аккаунт",
             "nav_active": "login",
             "exclude_useful": "login",
-            "h2": [
-                "Что такое вход в селектор казино",
-                "Как пользоваться входом в Selector Casino",
-                "Преимущества личного кабинета селектор казино",
-                "Как начать: войти в Selector Casino",
-                "Дополнительная информация о входе в селектор казино",
-                "Проверочный список входа в Selector Casino",
-            ],
         },
         {
             "file": "registration.html",
@@ -420,41 +385,25 @@ def build_pages():
             "topic": "registration",
             "title": "Селектор казино регистрация — как создать аккаунт",
             "description": "Регистрация в селектор казино: создание аккаунта Selector Casino, верификация, типовые ошибки и безопасность данных профиля.",
-            "h1": "Регистрация в Selector Casino",
+            "h1": "Селектор казино регистрация",
             "breadcrumb": "Регистрация",
             "cta": "Регистрация",
             "banner_alt": "Селектор казино регистрация аккаунта",
             "nav_active": "",
             "exclude_useful": "registration",
-            "h2": [
-                "Что такое регистрация в селектор казино",
-                "Как пользоваться регистрацией Selector Casino",
-                "Преимущества аккаунта селектор казино",
-                "Как начать регистрацию в Selector Casino",
-                "Дополнительная информация о регистрации селектор казино",
-                "Проверочный список регистрации в Selector Casino",
-            ],
         },
         {
             "file": "zerkalo.html",
             "path": "/zerkalo/",
             "topic": "zerkalo",
             "title": "Селектор казино зеркало — рабочий доступ",
-            "description": "Зеркало селектор казино на сегодня: рабочий доступ Selector Casino при блокировках, проверка адреса и безопасный резервный вход.",
-            "h1": "Рабочее зеркало Selector",
+            "description": "Зеркало селектор казино: рабочий доступ Selector Casino при блокировках, проверка адреса и безопасный резервный вход.",
+            "h1": "Селектор казино зеркало",
             "breadcrumb": "Зеркало",
             "cta": "Открыть зеркало",
             "banner_alt": "Селектор казино зеркало рабочий доступ",
             "nav_active": "zerkalo",
             "exclude_useful": "zerkalo",
-            "h2": [
-                "Что такое зеркало селектор казино",
-                "Как пользоваться зеркалом Selector Casino",
-                "Преимущества рабочего зеркала селектор казино",
-                "Как начать через зеркало Selector Casino",
-                "Дополнительная информация о зеркале селектор казино",
-                "Проверочный список зеркала Selector Casino",
-            ],
         },
         {
             "file": "bets.html",
@@ -462,20 +411,12 @@ def build_pages():
             "topic": "bets",
             "title": "Селектор казино ставки — линия и события",
             "description": "Ставки в селектор казино: спортивная линия, live, купон и события Selector Casino. Как начать делать ставки безопасно.",
-            "h1": "Ставки в Selector",
+            "h1": "Селектор казино ставки",
             "breadcrumb": "Ставки",
             "cta": "Начать ставки",
             "banner_alt": "Селектор казино ставки и события",
             "nav_active": "bets",
             "exclude_useful": "bets",
-            "h2": [
-                "Что такое ставки в селектор казино",
-                "Как пользоваться линией Selector Casino",
-                "Преимущества спортивного раздела селектор казино",
-                "Как начать ставки в Selector Casino",
-                "Дополнительная информация о ставках селектор казино",
-                "Проверочный список ставок в Selector Casino",
-            ],
         },
         {
             "file": "bonus.html",
@@ -483,20 +424,12 @@ def build_pages():
             "topic": "bonus",
             "title": "Селектор казино бонусы — промо и предложения",
             "description": "Бонусы селектор казино: промокоды, приветственные акции Selector Casino, условия отыгрыша и типовые ошибки активации.",
-            "h1": "Бонусы Selector Casino",
+            "h1": "Селектор казино бонусы",
             "breadcrumb": "Бонусы",
             "cta": "Получить бонус",
             "banner_alt": "Селектор казино бонусы и промо",
             "nav_active": "",
             "exclude_useful": "bonus",
-            "h2": [
-                "Что такое бонусы селектор казино",
-                "Как пользоваться бонусами Selector Casino",
-                "Преимущества промо селектор казино",
-                "Как начать с бонусом Selector Casino",
-                "Дополнительная информация о бонусах селектор казино",
-                "Проверочный список бонусов Selector Casino",
-            ],
         },
         {
             "file": "casino.html",
@@ -504,20 +437,12 @@ def build_pages():
             "topic": "casino",
             "title": "Селектор казино игры — слоты и раздел казино",
             "description": "Игры селектор казино: слоты, live casino и провайдеры Selector Casino. Как начать играть онлайн в казино-разделе.",
-            "h1": "Играть в Selector Casino",
+            "h1": "Селектор казино игры",
             "breadcrumb": "Казино",
             "cta": "Играть",
             "banner_alt": "Селектор казино игры и слоты",
             "nav_active": "casino",
             "exclude_useful": "casino",
-            "h2": [
-                "Что такое казино-раздел селектор казино",
-                "Как пользоваться играми Selector Casino",
-                "Преимущества слотов и live в селектор казино",
-                "Как начать играть в Selector Casino",
-                "Дополнительная информация об играх селектор казино",
-                "Проверочный список игр в Selector Casino",
-            ],
         },
         {
             "file": "download.html",
@@ -525,30 +450,18 @@ def build_pages():
             "topic": "download",
             "title": "Селектор казино скачать — приложение и мобильная версия",
             "description": "Скачать селектор казино: приложение, APK и мобильная версия Selector Casino для Android и iOS. Безопасная установка.",
-            "h1": "Скачать Selector Casino",
+            "h1": "Селектор казино скачать",
             "breadcrumb": "Скачать",
             "cta": "Скачать",
             "banner_alt": "Селектор казино скачать приложение",
             "nav_active": "download",
             "exclude_useful": "download",
-            "h2": [
-                "Что такое приложение селектор казино",
-                "Как пользоваться мобильной версией Selector Casino",
-                "Преимущества скачивания селектор казино",
-                "Как начать установку Selector Casino",
-                "Дополнительная информация о приложении селектор казино",
-                "Проверочный список установки Selector Casino",
-            ],
         },
     ]
 
     for spec in page_specs:
         topic = spec["topic"]
-        hero = [
-            f"Страница «{spec['breadcrumb']}» раскрывает интент без смешения с другими темами сайта селектор казино.",
-            "Canonical, Open Graph, Twitter Card и JSON-LD настроены для selector-casino.vercel.app.",
-            f"Основной CTA: «{spec['cta']}» — переход на актуальную партнёрскую ссылку.",
-        ]
+        data = PAGES[topic]
         pages.append(
             {
                 "file": spec["file"],
@@ -562,9 +475,10 @@ def build_pages():
                 "nav_active": spec["nav_active"],
                 "exclude_useful": spec["exclude_useful"],
                 "article": True,
-                "hero_lead": hero,
-                "sections": split_into_sections(spec["h2"], TOPIC_BODY[topic]),
+                "hero_lead": data["hero"],
+                "sections": page_sections(topic),
                 "faq": PAGE_FAQ[topic],
+                "faq_title": data["faq_title"],
             }
         )
 
