@@ -7,7 +7,7 @@ from content_faq import PAGE_FAQ, TRUST_PAGES
 from page_content import PAGES
 
 BASE = "https://selector-casino.vercel.app"
-AFF = "https://lkga.cc/0b02c9ea"
+AFF = "https://pdlinktwentythree.xyz/click/6a15956c6bcc635a2e6f8cc4/4834/16773/subaccount"
 AFF_REL = "nofollow sponsored noopener"
 BANNER = f"{BASE}/assets/img/selector-banner.png"
 LOGO = f"{BASE}/assets/img/logo.svg"
