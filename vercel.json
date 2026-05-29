@@ -39,6 +39,17 @@
     { "source": "/terms/", "destination": "/terms.html" },
     { "source": "/contacts", "destination": "/contacts.html" },
     { "source": "/contacts/", "destination": "/contacts.html" },
+
+
+    {
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://selectorcasino1.vercel.app/$1",
+      "permanent": true
+    }
+  ]
+}
     { "source": "/responsible-gaming", "destination": "/responsible-gaming.html" },
     { "source": "/responsible-gaming/", "destination": "/responsible-gaming.html" }
   ]
