@@ -7,7 +7,3 @@
     }
   ]
 }
-    { "source": "/responsible-gaming", "destination": "/responsible-gaming.html" },
-    { "source": "/responsible-gaming/", "destination": "/responsible-gaming.html" }
-  ]
-}
